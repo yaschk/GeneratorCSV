@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <title>{% block title %}{% endblock title %}</title>
+    </head>
+
+    <body class="Site">
+
+        <div class="site-wrapper h-100">
+            <div class="site-wrapper-content h-100">
+                    {% block content %}
+                    {% endblock content %}
+            </div>
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+
+    <script>
+        {
+            const mydata = `<tr>
+                            <td>{{ form.type }}</td>
+                            <td>{{ form.title }}</td>
+                            <td>{{ form.order_nmb }}</td>
+                            <span class="range-fields">
+                                <td>{{ form.min_value_range }}</td>
+                                <td>{{ form.max_value_range }}</td>
+                            </span>
+                            <td><button class="deletebtn">x</button></td>
+                        </tr>`.replace('id="id_max_value_range"', 'id="id_max_value_range" required="required"'
+            ).replace('id="id_min_value_range"', 'id="id_min_value_range" required="required"')
+
+            $(".appendbtn").click(function () {
+               $('#schema-field-table > tbody:last-child').append(mydata);
+            });
+        }
+        {
+            $(document).ready ( function () {
+                $(document).on ("click", ".deletebtn", function () {
+                    $(this).closest('tr').remove();
+                });
+            });
+        }
+    </script>
+
+    <script>
+        {
+            function CheckFieldOnRange(){
+                if ( !['1'].includes(obj.children('option:selected').val())) {
+                    obj.closest('tr').find("#id_max_value_range").attr("required", false)
+                    obj.closest('tr').find("#id_min_value_range").attr("required", false)
+                    obj.closest('tr').find("#id_max_value_range").hide()
+                    obj.closest('tr').find("#id_min_value_range").hide()
+                }else {
+                    obj.closest('tr').find("#id_max_value_range").attr("required", true)
+                    obj.closest('tr').find("#id_min_value_range").attr("required", true)
+                    obj.closest('tr').find("#id_max_value_range").show()
+                    obj.closest('tr').find("#id_min_value_range").show()
+                }
+            }
+            $(document).ready(function() {
+                $('#id_type').each(function (){
+                    obj = $(this)
+                    CheckFieldOnRange(obj)
+                })
+            });
+
+            $(document).on('change', '[id^="id_type"]', function(){
+                obj = $(this)
+                CheckFieldOnRange(obj)
+            })
+        }
+    </script>
+    <script>
+        {
+            $('#schema-field-form').submit(function(e){
+                $(".min_range_input").each(function () {
+                            let min_r = parseInt($(this).val())
+                            let max_r = parseInt($(this).closest('tr').find('.max_range_input').val())
+                            console.log(min_r, max_r)
+                            if (min_r >= max_r) {
+                                e.preventDefault()
+                                window.alert("Min range value should be less than max value");
+                                return false
+                            }
+                        })
+                  })
+         }
+    </script>
+    </body>
+</html>

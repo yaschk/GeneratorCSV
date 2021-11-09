@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    {% include 'navbar.html' %}
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <form method="post" id="schema-field-form"> {% csrf_token %}
+                    <div><h5>{{ schema_form }}</h5></div>
+                 <table class="table" id="schema-field-table">
+                     <thead>
+                        <tr>
+                          <th scope="col">Type</th>
+                          <th scope="col">Title</th>
+                          <th scope="col">Numeration</th>
+                          <th scope="col">Min range value</th>
+                          <th scope="col">Max range value</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="#divcontainer">
+                        <tr class="schema-fields-tr">
+                            <td>{{ form.type }}</td>
+                            <td>{{ form.title }}</td>
+                            <td>{{ form.order_nmb }}</td>
+                            <td>{{ form.min_value_range }}</td>
+                            <td>{{ form.max_value_range }}</td>
+                        </tr>
+
+                      </tbody>
+
+
+                 </table>
+                    <div class="add-field-btn"><button class="appendbtn" type="button">Add type field</button></div>
+                    <div><input type="submit" class="btn btn-success schema-form-btn" value="Create"></div>
+                </form>
+            </div>
+
+
+         </div>
+
+    </div>
+
+
+{% endblock content %}

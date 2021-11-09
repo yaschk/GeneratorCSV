@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    {% include 'navbar.html' %}
+    <div class="container mt-5">
+
+
+        <div class="row justify-content-center">
+            <a class="index-nav-link" href="{% url 'create-schema' %}">Create schema</a>
+
+            <a class="index-nav-link  {% if len_user_schemas == 0 %}disabled-link{% endif %}"
+               href="{% url 'create-dataset' %}">Create dataset
+            </a>
+        </div>
+
+
+        <div class="row justify-content-center">
+        {% if len_user_datasets > 0 %}
+            <table class="mx-auto datasets-table table">
+              <tr>
+                <th>Schema</th>
+                <th>Number of rows</th>
+                <th>Status</th>
+                <th>File</th>
+              </tr>
+              {% for i in user_datasets %}
+              <tr>
+                <td>{{ i.schema }}</td>
+                <td>{{ i.rows_counter }}</td>
+                  {% if i.status == "PR" %}
+                    <td style="background-color: yellow">Processing</td>
+                  {% elif i.status == "RD" %}
+                    <td style="background-color: darkseagreen">Ready</td>
+                  {% endif %}
+
+                  <td>
+                      {% if i.status == "RD" %}
+                        <a href="{% get_media_prefix %}{{ i.csv_file }}">Download</a>
+                      {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+        {% else %}
+            <div class="row justify-content-center mt-5">No created datasets</div>
+        {% endif %}
+        </table>
+    </div>
+    </div>
+
+{% endblock content %}
