@@ -1,20 +1,60 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
     {% include 'navbar.html' %}
 
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-5">
-                <form method="post"> {% csrf_token %}
-                    <div id="dataset_container" class="mb-4">
-                      <div>{{ form|crispy }}</div>
-                    </div>
-                    <input type="submit" class="btn btn-success w-100" value="Generate data">
-                </form>
+        <div class="row">
+            <h3>Data sets</h3>
+        </div>
+    <form method="post" id="rows-dataset-form"> {% csrf_token %}
+        <div class="row">
+            <div class="col-8">
+
+            </div>
+             <div class="col-1 text-center my-auto">
+                    {{ form.rows_counter.label }}:
+            </div>
+             <div class="col-1" style="padding: 0px">
+                    {{ form.rows_counter }}
+             </div>
+            <div class="col-2">
+                <button type="submit" class="btn btn-success">Generate data</button>
             </div>
         </div>
+    </form>
+        {% if len_schema_datasets != 0 %}
+            <table class="table table-bordered mt-5">
+                <tr>
+                    <th>#</th>
+                    <th>Created</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                 {% for i in schema_datasets %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.created|date:"Y-m-d" }}</td>
+                        {% if i.status == "PR" %}
+                            <td><span class="badge bg-secondary">Processing</span></td>
+                          {% elif i.status == "RD" %}
+                            <td> <span class="badge bg-success">Ready</span></td>
+                        {% endif %}
+                        <td>
+                            {% if i.status == "RD" %}
+                            <div>
+                              <a style="text-decoration: none" href="{% get_media_prefix %}{{ i.csv_file }}">
+                                  Download
+                              </a>
+                            </div>
+                            {% endif %}
+                        </td>
+                       </tr>
+                 {% endfor %}
+            </table>
+        {% else %}
+            <div class="row justify-content-center mt-5">No created datasets</div>
+        {% endif %}
     </div>
-
 {% endblock content %}

@@ -1,4 +1,9 @@
-<nav class="navbar navbar-dark bg-dark">
-  <a href="/" class="navbar-brand px-4">CSV Generator</a>
-    <a class="navbar-text p-2" href="{% url 'logout' %}">Logout</a>
+<nav class="navbar navbar-light bg-light">
+  <div class="container">
+    <a href="/" class="navbar-brand">FakeCSV</a>
+      <div>
+          <span class="navbar-text p-2">Hello, <b>{{ request.user.username }}</b></span>
+          <a class="navbar-text p-2" style="text-decoration: none" href="{% url 'logout' %}">Logout</a>
+      </div>
+  </div>
 </nav>

@@ -11,11 +11,13 @@ TYPE_CHOICES = (
 )
 
 
-class SchemaForm(forms.Form):
-    schema_title = forms.CharField(label='Schema title', required=True)
+class SchemaForm(forms.ModelForm):
+    schema_title = forms.CharField(label='Schema title', required=True,
+                                   widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Schema
+        fields = ['schema_title']
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
@@ -31,25 +33,21 @@ class SchemaForm(forms.Form):
 
 
 class TypeFieldForm(forms.Form):
+    title = forms.CharField(label='Title', required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     type = forms.ChoiceField(choices=TYPE_CHOICES, label="Field type", initial='',
-                             widget=forms.Select(attrs={'class': 'type_dropdown'}), required=True)
-    title = forms.CharField(label='Title', required=True)
-    order_nmb = forms.IntegerField(label="Order number", required=True)
-    min_value_range = forms.IntegerField(label="Min range value", required=False,
-                                         widget=forms.NumberInput(attrs={'class': 'min_range_input'}))
-    max_value_range = forms.IntegerField(label="Max range value", required=False,
-                                         widget=forms.NumberInput(attrs={'class': 'max_range_input'}))
+                             widget=forms.Select(attrs={'class': 'type_dropdown form-select'}), required=True)
+    min_value_range = forms.IntegerField(label="From", required=False,
+                                         widget=forms.NumberInput(attrs={'class': 'form-control min_range_input'}))
+    max_value_range = forms.IntegerField(label="To", required=False,
+                                         widget=forms.NumberInput(attrs={'class': 'form-control max_range_input'}))
+    order_nmb = forms.IntegerField(label="Order number", required=True,
+                                   widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
 
-class DatasetForm(forms.Form):
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', '')
-        super(DatasetForm, self).__init__(*args, **kwargs)
-        self.fields['schema_id'] = forms.ModelChoiceField(queryset=Schema.objects.filter(owner=user))
-        self.fields['rows_count'] = forms.IntegerField(label="Number of rows", required=True)
+class DatasetForm(forms.ModelForm):
+    rows_counter = forms.IntegerField(label="Rows", required=True,
+                                      widget=forms.TextInput(attrs={'class': 'form-control rows-form'}, ))
 
     class Meta:
         model = Dataset
-
-
+        fields = ['rows_counter']

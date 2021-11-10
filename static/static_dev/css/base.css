@@ -11,7 +11,6 @@ html, body {
 }
 .vertical-center-row {
     display: table-cell;
-    vertical-align: middle;
 }
 
 .login-error{
@@ -28,46 +27,20 @@ html, body {
 }
 
 
-.index-nav-link {
-    padding: 10px;
-    background-color: #d8f4ff;
-    width: 200px;
-    margin: 1px;
-    text-align: center;
-    color: black;
-    text-decoration: none;
-    border: 1px solid black;
+
+.full-input input{
+    width: 100%;
 }
 
-.index-nav-link:hover {
-   color: #353535;
-}
-
-.datasets-table{
-    margin-top: 60px;
-}
-
-.disabled-link {
-  pointer-events: none;
-  background-color: gray;
-}
-
-label{
-    margin: 5px;
-}
-
-.add-field-btn{
-    margin: 10px 1px;
-}
-
-.appendbtn{
-    border: none;
-    background-color: lightsteelblue;
-}
 
 .deletebtn{
+    background: none;
     border: none;
-    background-color: lightcoral;
-    margin-left: 5px;
-    border-radius: 5px;
+    color: red;
+    position: relative;
+    top: 30px;
+}
+
+.rows-form{
+    width: 70px;
 }

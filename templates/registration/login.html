@@ -5,12 +5,12 @@
 
     <div class="container container-table login-container">
     <div class="row vertical-center-row align-items-center">
-        <div class="col-md-4 col-md-offset-4 mx-auto p-4">
+        <div class="col-md-4 col-md-offset-4 mx-auto p-4" style="margin-top: 18%">
         {% if user.is_authenticated %}
             You are already logged in
         {% else %}
             <div class="d-flex align-items-center login-form-header">
-                <div class="box"><h4>CSV Generator</h4></div>
+                <div class="box"><h4>FakeCSV</h4></div>
             </div>
              {% if form.errors %}
                     <p class="login-error">Your username and password didn't match. Please try again.</p>

@@ -35,7 +35,7 @@ class Dataset(models.Model):
         Ready = 'RD', 'Ready'
 
     schema = models.ForeignKey(Schema, on_delete=models.CASCADE, blank=False, null=False, verbose_name="Schema")
-    rows_counter = models.BigIntegerField(blank=False, null=False, default=None, verbose_name="Raws counter")
+    rows_counter = models.BigIntegerField(blank=False, null=False, default=None, verbose_name="Rows counter")
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.Processing, blank=False, null=False,
                               verbose_name="Status")
     csv_file = models.FileField(upload_to='csv_files/', blank=True, null=True, default=None, verbose_name="CSV file")

@@ -23,26 +23,28 @@
 
     <script>
         {
-            const mydata = `<tr>
-                            <td>{{ form.type }}</td>
-                            <td>{{ form.title }}</td>
-                            <td>{{ form.order_nmb }}</td>
-                            <span class="range-fields">
-                                <td>{{ form.min_value_range }}</td>
-                                <td>{{ form.max_value_range }}</td>
-                            </span>
-                            <td><button class="deletebtn">x</button></td>
-                        </tr>`.replace('id="id_max_value_range"', 'id="id_max_value_range" required="required"'
+            const mydata = `<div class="row mt-3 field-type-row">
+                    {% for field in form %}
+                    <div class="col-2">
+                        <div>{{ field.label }}</div>
+                        <div>{{ field }}</div>
+                    </div>
+                    {% endfor %}
+                <div class="col-1 text-center">
+                   <button class="deletebtn" type="button">Delete</button>
+                </div>
+                </div>`.replace('id="id_max_value_range"', 'id="id_max_value_range" required="required"'
             ).replace('id="id_min_value_range"', 'id="id_min_value_range" required="required"')
 
+
             $(".appendbtn").click(function () {
-               $('#schema-field-table > tbody:last-child').append(mydata);
+               $('#schema-fields-div').append(mydata);
             });
         }
         {
             $(document).ready ( function () {
                 $(document).on ("click", ".deletebtn", function () {
-                    $(this).closest('tr').remove();
+                    $(this).closest('.field-type-row').remove();
                 });
             });
         }
@@ -52,17 +54,20 @@
         {
             function CheckFieldOnRange(){
                 if ( !['1'].includes(obj.children('option:selected').val())) {
-                    obj.closest('tr').find("#id_max_value_range").attr("required", false)
-                    obj.closest('tr').find("#id_min_value_range").attr("required", false)
-                    obj.closest('tr').find("#id_max_value_range").hide()
-                    obj.closest('tr').find("#id_min_value_range").hide()
+                    console.log("efr")
+                    obj.closest('.field-type-row').find("#id_max_value_range").attr("required", false)
+                    obj.closest('.field-type-row').find("#id_min_value_range").attr("required", false)
+                    obj.closest('.field-type-row').find("#id_max_value_range").closest('.col-2').css('visibility', 'hidden');
+                    obj.closest('.field-type-row').find("#id_min_value_range").closest('.col-2').css('visibility', 'hidden');
                 }else {
-                    obj.closest('tr').find("#id_max_value_range").attr("required", true)
-                    obj.closest('tr').find("#id_min_value_range").attr("required", true)
-                    obj.closest('tr').find("#id_max_value_range").show()
-                    obj.closest('tr').find("#id_min_value_range").show()
+                    console.log("233")
+                    obj.closest('.field-type-row').find("#id_max_value_range").attr("required", true)
+                    obj.closest('.field-type-row').find("#id_min_value_range").attr("required", true)
+                    obj.closest('.field-type-row').find("#id_max_value_range").closest('.col-2').css('visibility', 'visible');
+                    obj.closest('.field-type-row').find("#id_min_value_range").closest('.col-2').css('visibility', 'visible');
                 }
             }
+
             $(document).ready(function() {
                 $('#id_type').each(function (){
                     obj = $(this)
@@ -81,8 +86,8 @@
             $('#schema-field-form').submit(function(e){
                 $(".min_range_input").each(function () {
                             let min_r = parseInt($(this).val())
-                            let max_r = parseInt($(this).closest('tr').find('.max_range_input').val())
-                            console.log(min_r, max_r)
+                            let max_r = parseInt($(this).closest('.field-type-row').find('.max_range_input').val())
+
                             if (min_r >= max_r) {
                                 e.preventDefault()
                                 window.alert("Min range value should be less than max value");

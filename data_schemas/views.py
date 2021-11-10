@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -10,14 +10,15 @@ from django.http import HttpResponse, Http404
 
 @login_required(login_url='/login')
 def index(request):
-    user_datasets = Dataset.objects.filter(schema__owner=request.user)
-    len_user_datasets = len(user_datasets)
-    len_user_schemas = len(Schema.objects.filter(owner=request.user))
+    """Schema list view"""
+    user_schemas = Schema.objects.filter(owner=request.user)
+    len_user_schemas = len(user_schemas)
     return render(request, 'landing/index.html', locals())
 
 
-@login_required(login_url='/create-schema')
-def schema(request):
+@login_required(login_url='/login')
+def create_schema(request):
+    """Create schema view"""
 
     type_dict = {'1': IntegerField,
                  '2': FullnameField,
@@ -44,27 +45,66 @@ def schema(request):
                     type_model.objects.create(title=request.POST.getlist('title')[ind],
                                               numeration=request.POST.getlist('order_nmb')[ind],
                                               schema_id=schema_obj.id)
-            return redirect('index')
+            return redirect('create-datasets', schema_id=schema_obj.id)
     else:
         schema_form = SchemaForm(request.user)
         form = TypeFieldForm()
     return render(request, 'landing/schema.html', locals())
 
 
-@login_required(login_url='/create-dataset')
-def dataset(request):
+from django.views.generic.edit import UpdateView
+
+
+class GeeksUpdateView(UpdateView):
+    # specify the model you want to use
+    model = Schema
+
+    # specify the fields
+    fields = [
+        "title",
+        "description"
+    ]
+
+    # can specify success url
+    # url to redirect after successfully
+    # updating details
+    success_url = "/"
+
+
+@login_required(login_url='/login')
+def update_schema(request, schema_id):
+    schema_obj = get_object_or_404(Schema, id=schema_id, owner_id=request.user.id)
+    schema_obj.delete()
+    return render(request, 'landing/schema_details.html', {'schema': schema_obj})
+
+
+@login_required(login_url='/login')
+def delete_schema(request, schema_id):
+    """Delete schema view"""
+    schema_obj = get_object_or_404(Schema, id=schema_id, owner_id=request.user.id)
+    schema_obj.delete()
+    return redirect('index')
+
+
+@login_required(login_url='/login')
+def datasets(request, schema_id):
+    """Create dataset view"""
     if request.method == 'POST':
-        form = DatasetForm(request.POST, user=request.user)
+        form = DatasetForm(request.POST)
         if form.is_valid():
-            Dataset.objects.create(rows_counter=int(form.data['rows_count']), schema_id=int(form.data['schema_id']))
-            return redirect('index')
+            Dataset.objects.create(rows_counter=int(form.data['rows_counter']), schema_id=schema_id)
     else:
-        form = DatasetForm(user=request.user)
+        form = DatasetForm()
+
+    schema_datasets = Dataset.objects.filter(schema_id=schema_id)
+    len_schema_datasets = len(schema_datasets)
+
     return render(request, 'landing/dataset.html', locals())
 
 
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def download(request, path):
+    """Download CSV file view"""
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
