@@ -13,11 +13,35 @@ import datetime
 class Schema(models.Model):
     """User`s schema model instance"""
 
+    class StringCharacter(models.TextChoices):
+        Quote = 'QU', 'Quote'
+        Double_Quote = 'DQ', 'Double quote'
+
+    class Separator(models.TextChoices):
+        Comma = "CO", 'Comma'
+        Semicolon = "SE", "Semicolon"
+
     title = models.CharField(max_length=50, unique=True, blank=False, null=False, verbose_name="Title")
+    separator = models.CharField(max_length=2, choices=Separator.choices, default=Separator.Comma, blank=False,
+                                 null=False, verbose_name="Separator")
+    string_char = models.CharField(max_length=2, choices=StringCharacter.choices, default=StringCharacter.Quote,
+                                   blank=False, null=False, verbose_name="String character")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, db_index=True,
                               verbose_name="Owner")
     created = models.DateTimeField(auto_now_add=True, auto_now=False, verbose_name='Created')
     updated = models.DateTimeField(auto_now_add=False, auto_now=True, verbose_name='Updated')
+
+    @property
+    def get_separator_value(self):
+        if self.string_char == "CO":
+            return ","
+        return ';'
+
+    @property
+    def get_string_char(self):
+        if self.separator == 'QU':
+            return "'"
+        return '"'
 
     def __str__(self):
         return '%s' % self.title

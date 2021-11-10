@@ -1,6 +1,17 @@
-<nav class="navbar navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <a href="/" class="navbar-brand">FakeCSV</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Schemas</a>
+        </li>
+      </ul>
+    </div>
+
       <div>
           <span class="navbar-text p-2">Hello, <b>{{ request.user.username }}</b></span>
           <a class="navbar-text p-2" style="text-decoration: none" href="{% url 'logout' %}">Logout</a>

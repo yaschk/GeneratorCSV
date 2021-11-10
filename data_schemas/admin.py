@@ -29,7 +29,7 @@ class DateInline(admin.TabularInline):
 
 
 class SchemaAdmin(admin.ModelAdmin):
-    list_display = ['title', 'owner', 'created', 'updated']
+    list_display = ['title', 'owner', 'separator', 'string_char', 'created', 'updated']
     inlines = [FullnameInline, EmailInline, JobInline, IntegerInline, DateInline]
 
     class Meta:

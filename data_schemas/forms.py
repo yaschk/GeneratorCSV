@@ -14,10 +14,15 @@ TYPE_CHOICES = (
 class SchemaForm(forms.ModelForm):
     schema_title = forms.CharField(label='Schema title', required=True,
                                    widget=forms.TextInput(attrs={'class': 'form-control'}))
+    separator = forms.ChoiceField(choices=Schema.Separator.choices, initial='', label='Column separator', required=True,
+                                  widget=forms.Select(attrs={'class': 'type_dropdown form-select'}))
+    string_char = forms.ChoiceField(choices=Schema.StringCharacter.choices, initial='', label='String character',
+                                    required=True,
+                                    widget=forms.Select(attrs={'class': 'type_dropdown form-select'}))
 
     class Meta:
         model = Schema
-        fields = ['schema_title']
+        fields = ['schema_title', 'separator', 'string_char']
 
     def __init__(self, user, *args, **kwargs):
         self.user = user

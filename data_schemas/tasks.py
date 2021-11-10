@@ -14,8 +14,11 @@ def generate_data(instance_id):
     IntegerField = apps.get_model(app_label='data_schemas', model_name='IntegerField')
     DateField = apps.get_model(app_label='data_schemas', model_name='DateField')
     FieldTemplate = apps.get_model(app_label='data_schemas', model_name='FieldTemplate')
+    Schema = apps.get_model(app_label='data_schemas', model_name='Schema')
 
     instance = Dataset.objects.get(id=instance_id)
+
+    schema_obj = Schema.objects.get(id=instance.schema_id)
 
     schema_fields = [FullnameField, EmailField, JobField, IntegerField, DateField]
     fields = []
@@ -33,7 +36,9 @@ def generate_data(instance_id):
     headers = [x[0] for x in fields]
 
     with open(csv_title, 'w', encoding='UTF8') as f:
-        writer = csv.writer(f)
+        print(schema_obj.get_separator_value)
+        writer = csv.writer(f, delimiter=schema_obj.get_separator_value, quotechar=schema_obj.get_string_char,
+                            quoting=csv.QUOTE_NONNUMERIC)
         writer.writerow(headers)
 
         for row_index in range(instance.rows_counter):

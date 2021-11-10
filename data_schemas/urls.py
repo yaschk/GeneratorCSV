@@ -19,7 +19,7 @@ from data_schemas import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('schema/new/', views.create_schema, name='create-schema'),
-    path('schema/<int:schema_id>/', views.update_schema, name='edit-schema'),
+    # path('schema/<int:schema_id>/', views.update_schema, name='edit-schema'),
     path('schema/<int:schema_id>/delete/', views.delete_schema, name='delete-schema'),
     path('datasets/<int:schema_id>/', views.datasets, name='create-datasets'),
 ]

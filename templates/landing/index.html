@@ -30,7 +30,7 @@
                                 <td>{{ i.updated|date:"Y-m-d"  }}</td>
                                 <td>
                                     <div>
-                                      <a  href="{% url 'edit-schema' schema_id=i.id %}" style="text-decoration: none;">Edit scheme</a>
+{#                                      <a  href="{% url 'edit-schema' schema_id=i.id %}" style="text-decoration: none;">Edit scheme</a>#}
                                       <a style="text-decoration: none;color: red; margin-left: 10px"
                                          href="{% url 'delete-schema'  schema_id=i.id %}">Delete</a>
                                     </div>

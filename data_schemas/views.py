@@ -16,7 +16,7 @@ def index(request):
     return render(request, 'landing/index.html', locals())
 
 
-@login_required(login_url='/login')
+@login_required()
 def create_schema(request):
     """Create schema view"""
 
@@ -31,7 +31,9 @@ def create_schema(request):
         form = TypeFieldForm(request.POST)
 
         if form.is_valid() and schema_form.is_valid():
-            schema_obj = Schema.objects.create(title=form.data['schema_title'], owner_id=request.user.id)
+            schema_obj = Schema.objects.create(title=form.data['schema_title'], owner_id=request.user.id,
+                                               separator=form.data['separator'],
+                                               string_char=form.data['string_char'])
 
             for ind, el in enumerate(request.POST.getlist('type')):
                 type_model = type_dict.get(el)
@@ -52,33 +54,7 @@ def create_schema(request):
     return render(request, 'landing/schema.html', locals())
 
 
-from django.views.generic.edit import UpdateView
-
-
-class GeeksUpdateView(UpdateView):
-    # specify the model you want to use
-    model = Schema
-
-    # specify the fields
-    fields = [
-        "title",
-        "description"
-    ]
-
-    # can specify success url
-    # url to redirect after successfully
-    # updating details
-    success_url = "/"
-
-
-@login_required(login_url='/login')
-def update_schema(request, schema_id):
-    schema_obj = get_object_or_404(Schema, id=schema_id, owner_id=request.user.id)
-    schema_obj.delete()
-    return render(request, 'landing/schema_details.html', {'schema': schema_obj})
-
-
-@login_required(login_url='/login')
+@login_required()
 def delete_schema(request, schema_id):
     """Delete schema view"""
     schema_obj = get_object_or_404(Schema, id=schema_id, owner_id=request.user.id)
@@ -86,7 +62,7 @@ def delete_schema(request, schema_id):
     return redirect('index')
 
 
-@login_required(login_url='/login')
+@login_required()
 def datasets(request, schema_id):
     """Create dataset view"""
     if request.method == 'POST':
@@ -102,7 +78,7 @@ def datasets(request, schema_id):
     return render(request, 'landing/dataset.html', locals())
 
 
-@login_required(login_url='/login')
+@login_required()
 def download(request, path):
     """Download CSV file view"""
     file_path = os.path.join(settings.MEDIA_ROOT, path)
